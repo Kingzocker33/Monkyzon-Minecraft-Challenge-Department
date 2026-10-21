@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Minecraft Challenges</title>
+<style>
+:root{--stone:#55585b;--panel:#20252b;--panel2:#2a3037;--line:#727980;--blue:#35c7ff;--red:#ff4545;--green:#49e66f;--text:#f2f5f7;--muted:#b9c2ca}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--text);font-family:system-ui,Segoe UI,sans-serif;background:#171b20;image-rendering:pixelated}
+.stone-bg{position:fixed;inset:0;z-index:-2;background-color:#55585b;background-image:linear-gradient(45deg,#ffffff0b 25%,transparent 25%,transparent 75%,#00000012 75%),linear-gradient(45deg,#00000010 25%,transparent 25%,transparent 75%,#ffffff08 75%),linear-gradient(#00000010 1px,transparent 1px),linear-gradient(90deg,#00000010 1px,transparent 1px);background-size:32px 32px,32px 32px,16px 16px,16px 16px;background-position:0 0,16px 16px,0 0,0 0;transition:filter .3s}
+.ore{position:fixed;z-index:-1;width:100%;height:100%;pointer-events:none;background:radial-gradient(circle at 12% 24%,#f33 0 3px,transparent 4px),radial-gradient(circle at 15% 27%,#f33 0 4px,transparent 5px),radial-gradient(circle at 84% 16%,#f33 0 3px,transparent 4px),radial-gradient(circle at 78% 48%,#168dff 0 4px,transparent 5px),radial-gradient(circle at 22% 68%,#168dff 0 4px,transparent 5px),radial-gradient(circle at 90% 78%,#168dff 0 3px,transparent 4px);background-size:100% 100%;opacity:.9}
+.deep-transition{position:fixed;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(to bottom,transparent 0%,transparent 20%,#171a20aa 44%,#11151c 75%,#0b0f15 100%);opacity:var(--depth,0);transition:opacity .1s}
+header{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px clamp(16px,4vw,48px);background:#171b20eF;border-bottom:2px solid #737a82;box-shadow:0 4px 0 #0005;backdrop-filter:blur(8px)}
+.logo{font-weight:1000;letter-spacing:1px;line-height:1.05;font-size:clamp(18px,2.4vw,28px);text-shadow:3px 3px #000}
+.logo span{color:var(--blue);display:block}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav a{color:var(--text);text-decoration:none;padding:9px 12px;border:1px solid #626970;background:#252b31;font-weight:700}
+nav a:hover{border-color:var(--blue);color:var(--blue)}
+.wrap{width:min(1200px,94%);margin:auto}
+.hero{padding:42px 0 22px}
+.eyebrow{color:var(--blue);font-weight:900;letter-spacing:2px;text-transform:uppercase}
+h1{font-size:clamp(34px,6vw,60px);margin:8px 0;text-shadow:4px 4px #000;line-height:1}
+.sub{color:#e0e5e9;max-width:680px;font-size:17px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0 34px}
+.stat,.panel,.challenge{background:linear-gradient(135deg,#272d34f5,#171c22f5);border:2px solid #6d747c;box-shadow:5px 5px 0 #0007}
+.stat{padding:16px}
+.stat .label{font-size:13px;color:var(--muted);text-transform:uppercase;font-weight:800}
+.stat strong{display:block;font-size:24px;margin:4px 0 9px}
+.bar{height:12px;background:#101419;border:1px solid #515960;overflow:hidden}
+.bar>span{display:block;height:100%;width:0;background:linear-gradient(90deg,#0da7e8,var(--blue));transition:width .25s}
+.toolbar{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;margin:20px 0}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+button,select,input{font:inherit}
+button,.filter{cursor:pointer;border:1px solid #7b848c;background:#242a30;color:var(--text);padding:10px 13px;font-weight:800}
+button:hover,.filter:hover,.filter.active{border-color:var(--blue);color:var(--blue)}
+input[type=search]{min-width:min(100%,250px);padding:11px 12px;color:white;background:#171c21;border:2px solid #6d747c}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.challenge{padding:0;overflow:hidden;display:flex;flex-direction:column}
+.card-top{height:90px;display:flex;align-items:center;justify-content:center;font-size:40px;background:linear-gradient(135deg,#4a5057,#252b31);border-bottom:2px solid #6d747c}
+.challenge[data-type="Bauen"] .card-top{background:linear-gradient(135deg,#5d482e,#28251f)}
+.challenge[data-type="Ressourcen"] .card-top{background:linear-gradient(135deg,#163e55,#202832)}
+.challenge[data-type="Erkunden"] .card-top{background:linear-gradient(135deg,#34533a,#1d2b23)}
+.challenge[data-type="Nether"] .card-top{background:linear-gradient(135deg,#642b22,#241b1b)}
+.challenge[data-type="Spezial"] .card-top{background:linear-gradient(135deg,#49366c,#211d2b)}
+.card-body{padding:15px;display:flex;flex-direction:column;gap:9px;flex:1}
+.card-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+h3{margin:0;font-size:19px}
+.tag{font-size:11px;font-weight:900;text-transform:uppercase;padding:4px 7px;border:1px solid var(--blue);color:var(--blue);white-space:nowrap}
+.desc{color:#d1d7dc;line-height:1.45;min-height:42px}
+.reward{color:#4ddcff;font-weight:900}
+.card-foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:8px}
+.complete{display:flex;align-items:center;gap:8px;font-size:14px}
+.complete input{width:19px;height:19px;accent-color:#25d85b}
+.done{opacity:.7}
+.done h3{text-decoration:line-through}
+.done .card-top:after{content:"✓ ERLEDIGT";font-size:13px;font-weight:1000;background:#1d9e49;padding:6px 8px;margin-left:8px}
+.section-title{font-size:27px;margin:40px 0 14px;text-shadow:2px 2px #000}
+.panel{padding:18px;margin:18px 0 36px}
+.history{display:grid;gap:8px}
+.history-row{display:flex;gap:12px;align-items:center;justify-content:space-between;border-bottom:1px solid #4b535b;padding:10px 0}
+.history-row:last-child{border-bottom:0}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+footer{padding:24px 0 48px;color:#c4cbd1}
+.reset{color:#ffb4b4;border-color:#a44}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:1fr}}
+@media(max-width:560px){header{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:1fr}.card-top{height:70px}.hero{padding-top:28px}nav a{padding:7px 9px}}
+</style>
+</head>
+<body>
+<div class="stone-bg"></div><div class="ore"></div><div class="deep-transition" id="deep"></div>
+<header>
+  <div class="logo">MINECRAFT <span>CHALLENGES</span></div>
+  <nav><a href="#aufgaben">Aufgaben</a><a href="#fortschritt">Fortschritt</a><a href="#regeln">Regeln</a></nav>
+</header>
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow">Deine Welt. Deine Regeln.</div>
+    <h1>CHALLENGE<br>BOARD</h1>
+    <p class="sub">Erledige Aufgaben, sammle Diamanten und beweise, was du in Minecraft draufhast. Jede Challenge bringt dich deinem nächsten Rang näher.</p>
+    <div class="stats" id="fortschritt">
+      <div class="stat"><div class="label">Gesamtfortschritt</div><strong id="progressText">0 / 9 Aufgaben</strong><div class="bar"><span id="progressBar"></span></div></div>
+      <div class="stat"><div class="label">Verdiente Belohnungen</div><strong id="rewardText">0 Diamanten</strong><div class="bar"><span id="rewardBar"></span></div></div>
+      <div class="stat"><div class="label">Challenge-Rang</div><strong id="rankText">Stein-Abenteurer</strong><div class="bar"><span id="rankBar"></span></div></div>
+    </div>
+  </section>
+  <section id="aufgaben">
+    <h2 class="section-title">⛏ AKTUELLE CHALLENGES</h2>
+    <div class="toolbar"><div class="filters" id="filters"></div><input id="search" type="search" placeholder="Aufgaben suchen…"></div>
+    <div class="grid" id="challengeGrid"></div>
+  </section>
+  <section>
+    <h2 class="section-title">📦 ZULETZT ABGESCHLOSSEN</h2>
+    <div class="panel"><div id="history" class="history"><p class="muted">Noch keine Aufgaben abgeschlossen. Such dir deine erste Challenge aus!</p></div></div>
+  </section>
+  <section id="regeln">
+    <h2 class="section-title">📜 CHALLENGE-REGELN</h2>
+    <div class="panel">
+      <ol>
+        <li>Spiele fair und erledige die Aufgabe selbst.</li>
+        <li>Markiere eine Challenge erst als erledigt, wenn sie wirklich abgeschlossen ist.</li>
+        <li>Die angezeigten Diamanten sind eure vereinbarten Belohnungspunkte – sie werden nicht automatisch im Spiel vergeben.</li>
+        <li>Für einen gemeinsamen Fortschritt müssen wir später eine kostenlose Online-Datenbank verbinden.</li>
+      </ol>
+      <p class="small muted">Prototyp: Fortschritt wird in diesem Browser gespeichert. Andere Geräte sehen diese Daten noch nicht.</p>
+      <button class="reset" id="reset">Fortschritt zurücksetzen</button>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap">Minecraft Challenge Board · Fanprojekt, nicht offiziell mit Minecraft verbunden.</div></footer>
+<script>
+const tasks=[
+{id:1,title:"Baue ein gemütliches Haus",type:"Bauen",icon:"🏡",desc:"Baue ein Haus mit mindestens 3 Räumen, Beleuchtung und einem Bett.",reward:8,difficulty:"Einsteiger"},
+{id:2,title:"Sammle 32 Diamanten",type:"Ressourcen",icon:"💎",desc:"Finde und sammle 32 Diamanten in deiner Survival-Welt.",reward:16,difficulty:"Schwer"},
+{id:3,title:"Baue ein Netherportal",type:"Nether",icon:"🟪",desc:"Baue ein Portal und betrete zum ersten Mal den Nether.",reward:12,difficulty:"Mittel"},
+{id:4,title:"Entdecke ein neues Biom",type:"Erkunden",icon:"🧭",desc:"Finde ein Biom, das du in dieser Welt noch nicht besucht hast.",reward:5,difficulty:"Einsteiger"},
+{id:5,title:"Erreiche Level 30",type:"Spezial",icon:"📚",desc:"Sammle Erfahrung und erreiche Spieler-Level 30.",reward:10,difficulty:"Mittel"},
+{id:6,title:"Besiege den Enderdrachen",type:"Spezial",icon:"🐉",desc:"Bereite dich vor, betrete das Ende und besiege den Enderdrachen.",reward:50,difficulty:"Legendär"},
+{id:7,title:"Sammle 64 Eisen",type:"Ressourcen",icon:"⛏️",desc:"Beschaffe 64 Eisenbarren und lagere sie in einer Truhe.",reward:8,difficulty:"Einsteiger"},
+{id:8,title:"Baue eine automatische Farm",type:"Bauen",icon:"🌾",desc:"Baue eine funktionierende automatische Farm für eine Ressource.",reward:10,difficulty:"Mittel"},
+{id:9,title:"Fische 10 seltene Items",type:"Erkunden",icon:"🎣",desc:"Fange 10 Items beim Angeln und zeige deinen Fund.",reward:6,difficulty:"Mittel"}
+];
+const categories=["Alle","Bauen","Ressourcen","Erkunden","Nether","Spezial"];
+let active="Alle", completed=new Set(JSON.parse(localStorage.getItem("mcChallengesDone")||"[]"));
+const grid=document.getElementById("challengeGrid"),filters=document.getElementById("filters"),search=document.getElementById("search");
+function renderFilters(){filters.innerHTML=categories.map(c=>`<button class="filter ${active===c?'active':''}" data-filter="${c}">${c==="Alle"?"Alle Aufgaben":c}</button>`).join("");filters.querySelectorAll("button").forEach(b=>b.onclick=()=>{active=b.dataset.filter;renderFilters();renderTasks()})}
+function renderTasks(){const q=search.value.toLowerCase();const list=tasks.filter(t=>(active==="Alle"||t.type===active)&&(t.title+" "+t.desc+" "+t.type).toLowerCase().includes(q));grid.innerHTML=list.map(t=>`<article class="challenge ${completed.has(t.id)?'done':''}" data-type="${t.type}"><div class="card-top">${t.icon}</div><div class="card-body"><div class="card-heading"><h3>${t.title}</h3><span class="tag">${t.difficulty}</span></div><div class="desc">${t.desc}</div><div class="muted small">${t.type}</div><div class="reward">◆ Belohnung: ${t.reward} Diamanten</div><div class="card-foot"><label class="complete"><input type="checkbox" data-id="${t.id}" ${completed.has(t.id)?"checked":""}> Als erledigt markieren</label></div></div></article>`).join("")||"<p>Keine passenden Aufgaben gefunden.</p>";grid.querySelectorAll("input").forEach(cb=>cb.onchange=()=>{const id=Number(cb.dataset.id);cb.checked?completed.add(id):completed.delete(id);localStorage.setItem("mcChallengesDone",JSON.stringify([...completed]));renderTasks();renderStats()})}
+function renderStats(){const done=tasks.filter(t=>completed.has(t.id));const earned=done.reduce((s,t)=>s+t.reward,0),pct=Math.round(done.length/tasks.length*100),maxReward=tasks.reduce((s,t)=>s+t.reward,0);document.getElementById("progressText").textContent=`${done.length} / ${tasks.length} Aufgaben`;document.getElementById("progressBar").style.width=pct+"%";document.getElementById("rewardText").textContent=`${earned} Diamanten`;document.getElementById("rewardBar").style.width=(earned/maxReward*100)+"%";const rank=done.length>=9?"Legende":done.length>=6?"Diamant-Held":done.length>=3?"Redstone-Profi":"Stein-Abenteurer";document.getElementById("rankText").textContent=rank;document.getElementById("rankBar").style.width=pct+"%";const history=document.getElementById("history");history.innerHTML=done.length?done.map(t=>`<div class="history-row"><span>✅ ${t.title}</span><strong class="reward">+ ${t.reward} Diamanten</strong></div>`).join(""):'<p class="muted">Noch keine Aufgaben abgeschlossen. Such dir deine erste Challenge aus!</p>'}
+search.addEventListener("input",renderTasks);document.getElementById("reset").onclick=()=>{if(confirm("Wirklich alle gespeicherten Aufgaben zurücksetzen?")){completed.clear();localStorage.removeItem("mcChallengesDone");renderTasks();renderStats()}};window.addEventListener("scroll",()=>{const max=document.documentElement.scrollHeight-window.innerHeight;document.documentElement.style.setProperty("--depth",String(max>0?Math.min(1,window.scrollY/max*1.25):0))});renderFilters();renderTasks();renderStats();
+</script>
+</body>
+</html>
